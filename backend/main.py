@@ -87,6 +87,7 @@ app.include_router(admin_router, prefix="/api", tags=["Admin"])
 
 
 @app.get("/", tags=["Health"])
+@app.get("/api/health", tags=["Health"])
 async def root():
     """Root endpoint — basic health check."""
     return {
