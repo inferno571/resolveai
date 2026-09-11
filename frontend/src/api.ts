@@ -5,13 +5,13 @@
  */
 
 const getApiBase = (): string => {
-  const viteApiBase = import.meta.env.VITE_API_BASE;
-  if (viteApiBase) {
-    return viteApiBase;
-  }
-  const viteApiUrl = import.meta.env.VITE_API_URL;
-  if (viteApiUrl) {
-    return viteApiUrl.endsWith('/api') ? viteApiUrl : `${viteApiUrl.replace(/\/$/, '')}/api`;
+  let url = (import.meta.env.VITE_API_BASE as string) || (import.meta.env.VITE_API_URL as string);
+  if (url && url.trim()) {
+    url = url.trim();
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `https://${url}`;
+    }
+    return url.endsWith('/api') ? url : `${url.replace(/\/$/, '')}/api`;
   }
   if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
     return '/api';
