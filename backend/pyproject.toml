@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "resolveai-backend"
 version = "0.1.0"
@@ -18,6 +22,10 @@ dependencies = [
     "beautifulsoup4>=4.12.0",
     "markdownify>=0.13.0",
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["api*", "cbr*", "rag*", "llm*", "db*", "data*"]
 
 [project.optional-dependencies]
 dev = [
