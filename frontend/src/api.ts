@@ -4,7 +4,22 @@
  * Centralized HTTP client for all backend API calls.
  */
 
-const API_BASE = 'http://localhost:8000/api';
+const getApiBase = (): string => {
+  const viteApiBase = import.meta.env.VITE_API_BASE;
+  if (viteApiBase) {
+    return viteApiBase;
+  }
+  const viteApiUrl = import.meta.env.VITE_API_URL;
+  if (viteApiUrl) {
+    return viteApiUrl.endsWith('/api') ? viteApiUrl : `${viteApiUrl.replace(/\/$/, '')}/api`;
+  }
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    return '/api';
+  }
+  return 'http://localhost:8000/api';
+};
+
+const API_BASE = getApiBase();
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {

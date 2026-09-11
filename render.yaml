@@ -1,4 +1,5 @@
 services:
+  # ── Backend Service ───────────────────────────────────────────
   - type: web
     name: resolveai-backend
     env: python
@@ -16,3 +17,25 @@ services:
         value: gemini-flash-latest
       - key: GEMINI_API_KEY
         sync: false
+      - key: CORS_ORIGINS
+        value: "*"
+
+  # ── Frontend Service (Static Site) ────────────────────────────
+  - type: web
+    name: resolveai-frontend
+    env: static
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: resolveai-backend
+          property: host
